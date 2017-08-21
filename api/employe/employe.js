@@ -5,6 +5,7 @@
 var request = require('request');
 var express = require('express');
 var router = express.Router();
+var log=require ('../../logs/employeelog').logs();
 var constants=require('../../constants/constants').con();
 // get list of companies
 
@@ -19,8 +20,8 @@ router.get('/Companyfiles', function(req, res) {
     request.get(options, function(error, response, body) {
         res.set('Content-Type', 'Application/json');
         if (!error && response.statusCode == 200) {
-
-            console.log("success response from Myob: "+body);
+log.info({respose:body},response.statusCode);
+          ///  console.log("success response from Myob: "+body);
             res.status(response.statusCode).send(body);
         } else {
             console.log("failure response from Myob: "+body);

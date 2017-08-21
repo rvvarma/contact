@@ -4,10 +4,11 @@ var express = require('express');
 var constants=require('../../constants/constants').con();
 var log=require ('../../logs/log').logs();
 var router = express.Router();
+var t =       require('tcomb-validation');
+var schema =  require('../../api/customer/validator/jsonschema');
 
+var validate = require('express-jsonschema').validate;
 // get list of companies
-
-
 router.get('/Companyfiles', function(req, res) {
 
     var options = { headers: {
@@ -87,10 +88,10 @@ router.get('/contacts/:cid/:id', function(req, res) {
     });
 })
 
-router.post('/contacts/new/:cid', function(req, res) {
+router.post('/contacts/new/:cid',validate({body: schema.createpostschema}),function(req, res) {
     var cid = req.params.cid;
-    var requestBody = JSON.stringify(req.body);
-    console.log("Request body: "+requestBody);
+
+  console.log("Request body: "+requestBody);
     var options = { headers: {
       'Authorization': constants.auth,
       'x-myobapi-version':constants.myobv
@@ -113,12 +114,13 @@ router.post('/contacts/new/:cid', function(req, res) {
 
         }
     });
+
 })
-router.put('/contacts/:cid/:id', function(req, res) {
+router.put('/contacts/:cid/:id', validate({body: schema.createputschema}),function(req, res) {
       var id = req.params.id;
      var cid = req.params.cid;
     var requestBody = JSON.stringify(req.body);
-    //console.log("Request body: "+requestBody);
+
     var options = { headers: {
       'Authorization': constants.auth,
       'x-myobapi-version':constants.myobv
@@ -141,6 +143,7 @@ router.put('/contacts/:cid/:id', function(req, res) {
 
         }
     });
+
 })
 router.delete('/contacts/:cid/:id', function(req, res) {
     var id = req.params.id;
